@@ -72,23 +72,28 @@ header {
     height: 100vh;
     display: flex;
     align-items: center;
-    justify-content: center;
-    /* 生成した画像の上に、半透明の暗いフィルターを重ねて文字を読みやすくします */
-    background: linear-gradient(rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.8)), url('hero-bg.jpg') center/cover no-repeat;
-    color: #fff;
-    text-align: center;
-    padding: 0 20px;
+    justify-content: flex-end; /* 文字を右側に配置 */
+    /* 暗いフィルターを削除し、画像をそのまま表示 */
+    background: url('hero-bg.jpg') center/cover no-repeat;
+    padding: 0 8%; /* 画面右端からの余白 */
+}
+
+.hero-content {
+    max-width: 45%; /* 文字が左側の握手に被らないよう幅を制限 */
+    text-align: left; /* 文字を左揃えに */
 }
 
 .hero-content h2 {
-    font-size: clamp(2rem, 5vw, 3.5rem);
-    line-height: 1.3;
+    font-size: clamp(2rem, 3.5vw, 3.5rem);
+    line-height: 1.4;
     margin-bottom: 20px;
+    color: var(--primary-color); /* 文字色を白から濃いネイビーに変更 */
 }
 
 .hero-content p {
     font-size: 1.1rem;
-    color: #CBD5E1;
+    color: var(--text-color); /* サブテキストもグレーに */
+    font-weight: 700; /* 白背景に負けないよう少し太字に */
 }
 
 /* Sections */
@@ -229,5 +234,17 @@ footer {
     .company-table td {
         padding-top: 5px;
         margin-bottom: 10px;
+    }
+    #hero {
+        justify-content: center; /* スマホでは中央寄せ */
+        padding: 0 20px;
+    }
+    .hero-content {
+        max-width: 100%;
+        text-align: center;
+        background-color: rgba(255, 255, 255, 0.85); /* 文字の背景に半透明の白を敷く */
+        padding: 30px 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     }
 }
