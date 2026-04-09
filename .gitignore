@@ -1,0 +1,16 @@
+__pycache__/
+/.inner_datas/tmps/
+/.inner_datas/google_oauth_token.pkl
+/.venv/
+/.idea/
+/browser/chrome/main/*
+!/browser/chrome/main/138.0.7204.0.manifest
+/browser/tmp/
+/datas/google_oauth_token.pkl
+/delivery/
+/configs/google.json
+/docs/
+/logs/
+/pyinstaller/
+/results/
+/tmps/
