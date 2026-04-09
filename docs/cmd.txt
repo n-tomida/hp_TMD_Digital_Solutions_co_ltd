@@ -1,0 +1,3 @@
+cd C:/project/service/hp_TMD_Digital_Solutions_co_ltd
+. C:/project/service/hp_TMD_Digital_Solutions_co_ltd\.venv\Scripts\Activate.ps1
+pip freeze > requirements.txt
