@@ -1,42 +1,86 @@
-document.addEventListener('DOMContentLoaded', () => {
-    // スムーススクロール
-    const links = document.querySelectorAll('a[href^="#"]');
-    links.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const targetId = this.getAttribute('href');
-            if(targetId === '#') return;
-            const targetElement = document.querySelector(targetId);
-            const headerOffset = 70;
-            const elementPosition = targetElement.getBoundingClientRect().top;
-            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+document.documentElement.classList.add('js');
 
-            window.scrollTo({
-                top: offsetPosition,
-                behavior: 'smooth'
-            });
+document.addEventListener('DOMContentLoaded', () => {
+    const menuButton = document.querySelector('[data-menu-button]');
+    const nav = document.querySelector('[data-nav]');
+    const siteHeader = document.querySelector('.site-header');
+
+    if (menuButton && nav) {
+        const closeMenu = () => {
+            menuButton.setAttribute('aria-expanded', 'false');
+            menuButton.setAttribute('aria-label', 'メニューを開く');
+            nav.classList.remove('is-open');
+            document.body.classList.remove('menu-open');
+        };
+
+        const openMenu = () => {
+            menuButton.setAttribute('aria-expanded', 'true');
+            menuButton.setAttribute('aria-label', 'メニューを閉じる');
+            nav.classList.add('is-open');
+            document.body.classList.add('menu-open');
+        };
+
+        menuButton.addEventListener('click', () => {
+            const isOpen = menuButton.getAttribute('aria-expanded') === 'true';
+            if (isOpen) closeMenu(); else openMenu();
         });
+
+        nav.addEventListener('click', (event) => {
+            if (event.target.closest('a')) closeMenu();
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                closeMenu();
+                menuButton.focus();
+            }
+        });
+
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 920) closeMenu();
+        });
+    }
+
+    const handleHeaderState = () => {
+        if (!siteHeader) return;
+        siteHeader.classList.toggle('is-scrolled', window.scrollY > 12);
+    };
+    handleHeaderState();
+    window.addEventListener('scroll', handleHeaderState, { passive: true });
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.requestAnimationFrame(() => {
+        document.body.classList.add('is-loaded');
     });
 
-    // スクロール時のフェードイン（Intersection Observer）
-    const faders = document.querySelectorAll('.fade-in');
-    const appearOptions = {
-        threshold: 0.2,
-        rootMargin: "0px 0px -50px 0px"
-    };
+    const revealTargets = document.querySelectorAll(
+        '.split-heading > *, .business-item, .minoly-grid > *, .section-heading, .company-list div, .contact-cta-inner > *, .detail-grid > *, .contact-page-grid > *, .legal-content > *'
+    );
 
-    const appearOnScroll = new IntersectionObserver(function(entries, observer) {
-        entries.forEach(entry => {
-            if (!entry.isIntersecting) {
-                return;
-            } else {
-                entry.target.classList.add('appear');
+    revealTargets.forEach((el, index) => {
+        el.classList.add('reveal');
+        el.style.setProperty('--reveal-delay', `${Math.min((index % 6) * 70, 350)}ms`);
+    });
+
+    if (prefersReducedMotion || !('IntersectionObserver' in window)) {
+        revealTargets.forEach((el) => el.classList.add('is-visible'));
+        return;
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
                 observer.unobserve(entry.target);
             }
         });
-    }, appearOptions);
-
-    faders.forEach(fader => {
-        appearOnScroll.observe(fader);
+    }, {
+        threshold: 0.16,
+        rootMargin: '0px 0px -8% 0px'
     });
+
+    revealTargets.forEach((el) => observer.observe(el));
 });
+
+
+
